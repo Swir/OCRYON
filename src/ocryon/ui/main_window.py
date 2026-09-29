@@ -24,6 +24,7 @@ from PySide6.QtWidgets import (
 )
 
 from ocryon.core.document import LoadedDocument
+from ocryon.core.exporters import export_docx, export_txt, recognized_pages
 from ocryon.core.loaders import load_document
 from ocryon.core.ocr import TesseractEngine
 from ocryon.ui.ocr_worker import OCRWorker
@@ -81,9 +82,13 @@ class MainWindow(QMainWindow):
         self.recognize_all_button.clicked.connect(self.recognize_all_pages)
         top_layout.addWidget(self.recognize_all_button)
 
-        save_button = QPushButton("Save TXT")
-        save_button.clicked.connect(self.save_text)
-        top_layout.addWidget(save_button)
+        export_txt_button = QPushButton("Export TXT")
+        export_txt_button.clicked.connect(self.export_all_txt)
+        top_layout.addWidget(export_txt_button)
+
+        export_docx_button = QPushButton("Export DOCX")
+        export_docx_button.clicked.connect(self.export_all_docx)
+        top_layout.addWidget(export_docx_button)
 
         root_layout.addWidget(top)
 
@@ -289,20 +294,52 @@ class MainWindow(QMainWindow):
         self.recognize_all_button.setEnabled(enabled)
         self.language.setEnabled(enabled)
 
-    def save_text(self) -> None:
-        text = self.result.toPlainText()
-        if not text.strip():
-            QMessageBox.information(self, "OCRYON", "There is no recognized text to save.")
+    def export_all_txt(self) -> None:
+        pages = recognized_pages(self.pages)
+        if not pages:
+            QMessageBox.information(self, "OCRYON", "Recognize at least one page first.")
             return
 
         file_name, _ = QFileDialog.getSaveFileName(
             self,
-            "Save recognized text",
-            str(Path.home() / "OCRYON.txt"),
+            "Export recognized document",
+            str(Path.home() / "OCRYON-export.txt"),
             "Text files (*.txt)",
         )
         if not file_name:
             return
 
-        Path(file_name).write_text(text, encoding="utf-8")
-        self.statusBar().showMessage(f"Saved {Path(file_name).name}")
+        try:
+            count = export_txt(pages, file_name)
+        except Exception as exc:
+            QMessageBox.critical(self, "OCRYON", f"TXT export failed:\n{exc}")
+            return
+
+        self.statusBar().showMessage(
+            f"Exported {count} recognized page(s) to {Path(file_name).name}"
+        )
+
+    def export_all_docx(self) -> None:
+        pages = recognized_pages(self.pages)
+        if not pages:
+            QMessageBox.information(self, "OCRYON", "Recognize at least one page first.")
+            return
+
+        file_name, _ = QFileDialog.getSaveFileName(
+            self,
+            "Export recognized document",
+            str(Path.home() / "OCRYON-export.docx"),
+            "Word documents (*.docx)",
+        )
+        if not file_name:
+            return
+
+        try:
+            count = export_docx(pages, file_name)
+        except Exception as exc:
+            QMessageBox.critical(self, "OCRYON", f"DOCX export failed:\n{exc}")
+            return
+
+        self.statusBar().showMessage(
+            f"Exported {count} recognized page(s) to {Path(file_name).name}"
+        )
