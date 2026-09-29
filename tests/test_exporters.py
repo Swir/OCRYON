@@ -1,18 +1,19 @@
 from pathlib import Path
 
 from docx import Document as WordDocument
+import fitz
 from PIL import Image
 import pytest
 
 from ocryon.core.document import DocumentPage
-from ocryon.core.exporters import export_docx, export_txt
+from ocryon.core.exporters import export_docx, export_searchable_pdf, export_txt
 
 
 def page(number: int, text: str) -> DocumentPage:
     return DocumentPage(
         Path("scan.pdf"),
         number,
-        Image.new("RGB", (4, 4)),
+        Image.new("RGB", (400, 300), "white"),
         ocr_text=text,
         ocr_language="eng" if text else None,
     )
@@ -47,7 +48,23 @@ def test_export_docx_writes_recognized_pages(tmp_path: Path) -> None:
     assert "Beta" in text
 
 
-@pytest.mark.parametrize("exporter", [export_txt, export_docx])
+def test_export_searchable_pdf_keeps_image_and_text_layer(tmp_path: Path) -> None:
+    destination = tmp_path / "searchable.pdf"
+
+    count = export_searchable_pdf([page(1, "Alpha searchable text")], destination)
+
+    assert count == 1
+    with fitz.open(destination) as document:
+        assert len(document) == 1
+        extracted = document[0].get_text()
+        assert "Alpha searchable text" in extracted
+        assert document[0].get_images()
+
+
+@pytest.mark.parametrize(
+    "exporter",
+    [export_txt, export_docx, export_searchable_pdf],
+)
 def test_export_rejects_empty_recognition(tmp_path: Path, exporter) -> None:
     destination = tmp_path / "empty.out"
 
