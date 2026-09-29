@@ -24,7 +24,12 @@ from PySide6.QtWidgets import (
 )
 
 from ocryon.core.document import LoadedDocument
-from ocryon.core.exporters import export_docx, export_txt, recognized_pages
+from ocryon.core.exporters import (
+    export_docx,
+    export_searchable_pdf,
+    export_txt,
+    recognized_pages,
+)
 from ocryon.core.loaders import load_document
 from ocryon.core.ocr import TesseractEngine
 from ocryon.ui.ocr_worker import OCRWorker
@@ -82,13 +87,20 @@ class MainWindow(QMainWindow):
         self.recognize_all_button.clicked.connect(self.recognize_all_pages)
         top_layout.addWidget(self.recognize_all_button)
 
-        export_txt_button = QPushButton("Export TXT")
+        export_txt_button = QPushButton("TXT")
+        export_txt_button.setToolTip("Export all recognized pages as text")
         export_txt_button.clicked.connect(self.export_all_txt)
         top_layout.addWidget(export_txt_button)
 
-        export_docx_button = QPushButton("Export DOCX")
+        export_docx_button = QPushButton("DOCX")
+        export_docx_button.setToolTip("Export all recognized pages as a Word document")
         export_docx_button.clicked.connect(self.export_all_docx)
         top_layout.addWidget(export_docx_button)
+
+        export_pdf_button = QPushButton("Searchable PDF")
+        export_pdf_button.setToolTip("Keep page images and add a searchable OCR text layer")
+        export_pdf_button.clicked.connect(self.export_all_pdf)
+        top_layout.addWidget(export_pdf_button)
 
         root_layout.addWidget(top)
 
@@ -342,4 +354,29 @@ class MainWindow(QMainWindow):
 
         self.statusBar().showMessage(
             f"Exported {count} recognized page(s) to {Path(file_name).name}"
+        )
+
+    def export_all_pdf(self) -> None:
+        pages = recognized_pages(self.pages)
+        if not pages:
+            QMessageBox.information(self, "OCRYON", "Recognize at least one page first.")
+            return
+
+        file_name, _ = QFileDialog.getSaveFileName(
+            self,
+            "Export searchable PDF",
+            str(Path.home() / "OCRYON-searchable.pdf"),
+            "PDF documents (*.pdf)",
+        )
+        if not file_name:
+            return
+
+        try:
+            count = export_searchable_pdf(pages, file_name)
+        except Exception as exc:
+            QMessageBox.critical(self, "OCRYON", f"PDF export failed:\n{exc}")
+            return
+
+        self.statusBar().showMessage(
+            f"Exported {count} searchable page(s) to {Path(file_name).name}"
         )
