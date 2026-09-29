@@ -1,0 +1,31 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ocryon"
+version = "0.1.0a1"
+description = "Local-first intelligent document recognition for Windows"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+  "PySide6>=6.8,<7",
+  "PyMuPDF>=1.24,<2",
+  "Pillow>=10.4,<12",
+  "pytesseract>=0.3.13,<1",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.3,<9",
+]
+
+[project.scripts]
+ocryon = "ocryon.__main__:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ocryon"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
