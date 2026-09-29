@@ -6,16 +6,20 @@ OCRYON is an open-source desktop OCR application focused on fast, private and co
 
 ## Project status
 
-**0.1 Alpha — foundation in progress**
+**0.1 Alpha — active development**
 
 - [x] Project architecture
 - [x] Windows-first desktop target
-- [ ] Image/PDF import
-- [ ] Document preview
-- [ ] Offline OCR engine
-- [ ] Editable recognition results
-- [ ] TXT / PDF / DOCX export
-- [ ] Batch processing
+- [x] Image/PDF import
+- [x] Document preview
+- [x] Offline OCR backend architecture
+- [x] Editable per-page recognition results
+- [x] Background OCR without freezing the GUI
+- [x] Batch OCR for all loaded pages
+- [x] TXT export for the current page
+- [ ] Bundled OCR runtime and language data
+- [ ] DOCX / searchable PDF export
+- [ ] Image preprocessing and OCR quality controls
 - [ ] Installer
 
 ## Principles
@@ -33,6 +37,13 @@ OCRYON is an open-source desktop OCR application focused on fast, private and co
 - PyMuPDF
 - Pillow
 - Local OCR backend
+
+## Development OCR
+
+Current development builds use the Tesseract backend. Set the `OCRYON_TESSERACT`
+environment variable to a local `tesseract.exe`, or make Tesseract available on
+`PATH`. Release builds are planned to bundle the runtime so users do not need a
+separate OCR installation.
 
 ## License
 
