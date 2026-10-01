@@ -75,5 +75,9 @@ class TesseractEngine(OCREngine):
             )
 
         prepared = prepare_for_ocr(image, self.preprocess_options)
-        text = pytesseract.image_to_string(prepared, lang=language)
+        tessdata = self.executable.parent / "tessdata"
+        config = "--oem 1"
+        if tessdata.is_dir():
+            config += f' --tessdata-dir "{tessdata}"'
+        text = pytesseract.image_to_string(prepared, lang=language, config=config)
         return OCRResult(text=text, language=language)
