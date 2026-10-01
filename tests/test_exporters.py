@@ -7,15 +7,21 @@ import pytest
 
 from ocryon.core.document import DocumentPage
 from ocryon.core.exporters import export_docx, export_searchable_pdf, export_txt
+from ocryon.core.ocr import OCRWord
 
 
-def page(number: int, text: str) -> DocumentPage:
+def page(
+    number: int,
+    text: str,
+    words: tuple[OCRWord, ...] = (),
+) -> DocumentPage:
     return DocumentPage(
         Path("scan.pdf"),
         number,
         Image.new("RGB", (400, 300), "white"),
         ocr_text=text,
         ocr_language="eng" if text else None,
+        ocr_words=words,
     )
 
 
@@ -59,6 +65,27 @@ def test_export_searchable_pdf_keeps_image_and_text_layer(tmp_path: Path) -> Non
         extracted = document[0].get_text()
         assert "Alpha searchable text" in extracted
         assert document[0].get_images()
+
+
+def test_export_searchable_pdf_uses_word_level_positions(tmp_path: Path) -> None:
+    destination = tmp_path / "layout.pdf"
+    words = (
+        OCRWord("Alpha", left=42, top=70, width=80, height=24, confidence=95.0),
+        OCRWord("Beta", left=180, top=70, width=70, height=24, confidence=93.0),
+    )
+
+    count = export_searchable_pdf(
+        [page(1, "Alpha Beta", words=words)],
+        destination,
+    )
+
+    assert count == 1
+    with fitz.open(destination) as document:
+        extracted_words = document[0].get_text("words")
+        alpha = next(item for item in extracted_words if item[4] == "Alpha")
+        beta = next(item for item in extracted_words if item[4] == "Beta")
+        assert abs(alpha[0] - 42) < 3
+        assert abs(beta[0] - 180) < 3
 
 
 @pytest.mark.parametrize(

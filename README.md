@@ -6,7 +6,9 @@ OCRYON is an open-source desktop OCR application focused on fast, private and co
 
 ## Project status
 
-**0.1 Alpha — active development**
+**0.2.0 Alpha — active development**
+
+Public test Beta `v0.1.0-beta.1` is frozen for user testing. Development continues on `dev/0.2.0` without rewriting the historical Beta release.
 
 - [x] Project architecture
 - [x] Windows-first desktop target
@@ -21,11 +23,15 @@ OCRYON is an open-source desktop OCR application focused on fast, private and co
 - [x] DOCX export
 - [x] Searchable PDF export with invisible OCR text layer
 - [x] Original OCRYON application mark
-- [ ] Bundled OCR runtime and language data
-- [ ] Word-level OCR coordinates and layout reconstruction
+- [x] Bundled OCR runtime and ENG/PL/NOR language data
+- [x] Windows EXE/ZIP packaging pipeline
+- [x] Windows installer pipeline
+- [x] Word-level OCR coordinates and first-pass layout reconstruction
 - [ ] Advanced preprocessing controls
-- [ ] Windows EXE packaging
-- [ ] Windows installer
+- [ ] Accessibility and HiDPI polish
+- [ ] Diagnostics and recovery UI
+- [ ] 0.2.0 frozen Windows package/installer smoke
+- [ ] Stable 0.2.0 release
 
 ## Principles
 
@@ -48,8 +54,8 @@ OCRYON is an open-source desktop OCR application focused on fast, private and co
 
 Current development builds use the Tesseract backend. Set the `OCRYON_TESSERACT`
 environment variable to a local `tesseract.exe`, or make Tesseract available on
-`PATH`. Release builds are planned to bundle the runtime so users do not need a
-separate OCR installation.
+`PATH`. Release candidates bundle the runtime and ENG/PL/NOR data so testers do
+not need a separate OCR installation.
 
 ## Current workflow
 
@@ -57,9 +63,12 @@ separate OCR installation.
 2. Preview individual pages.
 3. Recognize one page or the full loaded batch.
 4. OCR runs outside the GUI thread.
-5. Edit recognized text per page.
-6. Export recognized pages to TXT, DOCX or searchable PDF.
+5. Word-level coordinates are captured for layout-aware exports.
+6. Edit recognized text per page.
+7. Export recognized pages to TXT, DOCX or searchable PDF.
+
+Manual edits intentionally invalidate stale OCR coordinates for that page, so searchable-PDF export falls back to the edited page text instead of exporting mismatched layout data.
 
 ## License
 
-License will be selected before the first public alpha release.
+License will be selected before the first stable release.

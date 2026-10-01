@@ -200,7 +200,13 @@ class MainWindow(QMainWindow):
 
         row = self.page_list.currentRow()
         if 0 <= row < len(self.pages):
-            self.pages[row].ocr_text = self.result.toPlainText()
+            page = self.pages[row]
+            edited_text = self.result.toPlainText()
+            if edited_text != page.ocr_text:
+                page.ocr_text = edited_text
+                # Manual edits no longer match the original word coordinates.
+                # Falling back to page-level PDF text keeps exports truthful.
+                page.ocr_words = ()
 
     def recognize_current_page(self) -> None:
         row = self.page_list.currentRow()
@@ -250,6 +256,7 @@ class MainWindow(QMainWindow):
 
         thread.started.connect(worker.run)
         worker.page_recognized.connect(self._store_ocr_result)
+        worker.layout_recognized.connect(self._store_ocr_layout)
         worker.progress.connect(self._update_ocr_progress)
         worker.failed.connect(self._ocr_failed)
         worker.finished.connect(thread.quit)
@@ -277,6 +284,15 @@ class MainWindow(QMainWindow):
             self._updating_result = True
             self.result.setPlainText(text)
             self._updating_result = False
+
+    def _store_ocr_layout(self, page_index: int, words: object) -> None:
+        if not 0 <= page_index < len(self.pages):
+            return
+
+        try:
+            self.pages[page_index].ocr_words = tuple(words)
+        except TypeError:
+            self.pages[page_index].ocr_words = ()
 
     def _update_ocr_progress(self, completed: int, total: int) -> None:
         self.ocr_progress.setRange(0, total)

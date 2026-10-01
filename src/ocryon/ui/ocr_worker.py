@@ -12,11 +12,11 @@ class OCRWorker(QObject):
     """Run OCR outside the GUI thread.
 
     The worker is deliberately UI-agnostic: it receives document pages and
-    emits page indexes plus recognized text. This keeps long PDF batches from
-    freezing the main window.
+    emits page indexes plus recognized text and optional structured layout.
     """
 
     page_recognized = Signal(int, str, str)
+    layout_recognized = Signal(int, object)
     progress = Signal(int, int)
     failed = Signal(str)
     finished = Signal()
@@ -49,6 +49,7 @@ class OCRWorker(QObject):
                 page = self._pages[page_index]
                 result = self._engine.recognize(page.image, self._language)
                 self.page_recognized.emit(page_index, result.text, result.language)
+                self.layout_recognized.emit(page_index, result.words)
                 self.progress.emit(position, total)
         except Exception as exc:
             self.failed.emit(str(exc))

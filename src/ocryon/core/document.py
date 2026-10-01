@@ -2,8 +2,12 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 from PIL import Image
+
+if TYPE_CHECKING:
+    from ocryon.core.ocr import OCRWord
 
 
 @dataclass(slots=True)
@@ -13,6 +17,7 @@ class DocumentPage:
     image: Image.Image
     ocr_text: str = ""
     ocr_language: str | None = None
+    ocr_words: tuple["OCRWord", ...] = ()
 
     @property
     def label(self) -> str:

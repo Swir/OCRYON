@@ -2,7 +2,7 @@ name: OCRYON CI
 
 on:
   push:
-    branches: ["main"]
+    branches: ["main", "dev/0.2.0"]
   pull_request:
 
 jobs:
