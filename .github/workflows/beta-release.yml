@@ -13,6 +13,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: ocryon-beta-release
+  cancel-in-progress: true
+
 jobs:
   beta:
     runs-on: windows-2025
@@ -42,7 +46,7 @@ jobs:
           if ($hash -ne "bee9e3434bd94fd65387d9be28cd467a41f61b1275383b55b0f59a1331270ae4") { throw "Tesseract installer hash mismatch" }
 
           $runtime = "$env:RUNNER_TEMP\tesseract"
-          Start-Process $setup -ArgumentList "/VERYSILENT","/SUPPRESSMSGBOXES","/NORESTART","/SP-","/DIR=$runtime" -Wait
+          Start-Process $setup -ArgumentList "/S","/D=$runtime" -Wait
           if (!(Test-Path "$runtime\tesseract.exe")) { throw "Tesseract installation failed" }
 
           New-Item -ItemType Directory -Force vendor\tesseract | Out-Null
