@@ -1,0 +1,138 @@
+name: OCRYON Beta Release
+
+on:
+  push:
+    branches: ["feat/bundled-ocr-runtime-foundation"]
+    paths:
+      - ".github/workflows/beta-release.yml"
+      - "packaging/**"
+      - "src/**"
+      - "pyproject.toml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  beta:
+    runs-on: windows-2025
+    env:
+      VERSION: 0.1.0-beta.1
+      TESSERACT_VERSION: 5.5.3
+      TESSDATA_COMMIT: 87416418657359cb625c412a48b6e1d6d41c29bd
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Python dependencies
+        run: python -m pip install -e ".[dev]"
+
+      - name: Bundle Tesseract runtime
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $url = "https://github.com/tesseract-ocr/tesseract/releases/download/5.5.3/tesseract-ocr-w64-setup-5.5.3.20260724.exe"
+          $setup = "$env:RUNNER_TEMP\tesseract-setup.exe"
+          Invoke-WebRequest $url -OutFile $setup
+          $hash = (Get-FileHash $setup -Algorithm SHA256).Hash.ToLower()
+          if ($hash -ne "bee9e3434bd94fd65387d9be28cd467a41f61b1275383b55b0f59a1331270ae4") { throw "Tesseract installer hash mismatch" }
+
+          $runtime = "$env:RUNNER_TEMP\tesseract"
+          Start-Process $setup -ArgumentList "/VERYSILENT","/SUPPRESSMSGBOXES","/NORESTART","/SP-","/DIR=$runtime" -Wait
+          if (!(Test-Path "$runtime\tesseract.exe")) { throw "Tesseract installation failed" }
+
+          New-Item -ItemType Directory -Force vendor\tesseract | Out-Null
+          Copy-Item "$runtime\*" vendor\tesseract -Recurse -Force
+          New-Item -ItemType Directory -Force vendor\tesseract\tessdata | Out-Null
+
+          foreach ($lang in @("eng","pol","nor")) {
+            $model = "https://raw.githubusercontent.com/tesseract-ocr/tessdata_fast/$env:TESSDATA_COMMIT/$lang.traineddata"
+            Invoke-WebRequest $model -OutFile "vendor\tesseract\tessdata\$lang.traineddata"
+          }
+
+          $langs = & vendor\tesseract\tesseract.exe --tessdata-dir vendor\tesseract\tessdata --list-langs
+          foreach ($lang in @("eng","pol","nor")) {
+            if ($langs -notcontains $lang) { throw "Missing OCR language: $lang" }
+          }
+
+      - name: Render application icon
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force build | Out-Null
+          @'
+          import os
+          os.environ["QT_QPA_PLATFORM"] = "offscreen"
+          from PySide6.QtCore import QRectF
+          from PySide6.QtGui import QGuiApplication, QImage, QPainter
+          from PySide6.QtSvg import QSvgRenderer
+          app = QGuiApplication([])
+          image = QImage(512, 512, QImage.Format_ARGB32)
+          image.fill(0)
+          painter = QPainter(image)
+          QSvgRenderer("src/ocryon/assets/ocryon.svg").render(painter, QRectF(0, 0, 512, 512))
+          painter.end()
+          if not image.save("build/ocryon.png"):
+              raise SystemExit("icon render failed")
+          '@ | Set-Content build\render_icon.py
+          python build\render_icon.py
+
+      - name: Test
+        run: python -m pytest -q
+
+      - name: Build portable application
+        shell: pwsh
+        run: |
+          pyinstaller --noconfirm --clean --onedir --windowed --name OCRYON --paths src --icon build\ocryon.png --add-data "src\ocryon\assets\ocryon.svg;ocryon\assets" --add-data "vendor\tesseract;vendor\tesseract" src\ocryon\__main__.py
+          if (!(Test-Path "dist\OCRYON\OCRYON.exe")) { throw "OCRYON.exe missing" }
+
+      - name: Frozen launch smoke
+        shell: pwsh
+        run: |
+          $env:QT_QPA_PLATFORM = "offscreen"
+          $p = Start-Process "dist\OCRYON\OCRYON.exe" -PassThru
+          Start-Sleep -Seconds 8
+          if ($p.HasExited) { throw "Frozen OCRYON exited during smoke test" }
+          Stop-Process -Id $p.Id -Force
+
+      - name: Build ZIP and installer
+        shell: pwsh
+        run: |
+          Compress-Archive -Path "dist\OCRYON\*" -DestinationPath "dist\OCRYON-$env:VERSION-Windows-x64.zip" -Force
+          Push-Location packaging
+          & "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe" OCRYON.iss
+          Pop-Location
+          if (!(Test-Path "dist\OCRYON-$env:VERSION-Setup.exe")) { throw "Installer missing" }
+
+      - name: Checksums
+        shell: pwsh
+        run: |
+          $files = @(
+            "dist\OCRYON-$env:VERSION-Windows-x64.zip",
+            "dist\OCRYON-$env:VERSION-Setup.exe"
+          )
+          $lines = foreach ($file in $files) {
+            $hash = (Get-FileHash $file -Algorithm SHA256).Hash.ToLower()
+            "$hash  $([IO.Path]::GetFileName($file))"
+          }
+          $lines | Set-Content "dist\OCRYON-$env:VERSION-SHA256SUMS.txt"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: OCRYON-${{ env.VERSION }}-Windows
+          path: |
+            dist/OCRYON-${{ env.VERSION }}-Windows-x64.zip
+            dist/OCRYON-${{ env.VERSION }}-Setup.exe
+            dist/OCRYON-${{ env.VERSION }}-SHA256SUMS.txt
+
+      - name: Publish prerelease
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $tag = "v$env:VERSION"
+          if (gh release view $tag 2>$null) { throw "Release $tag already exists" }
+          gh release create $tag --target $env:GITHUB_SHA --prerelease --title "OCRYON $env:VERSION" --notes "Windows x64 test candidate. Includes offline Tesseract OCR with ENG, PL and NOR data. Test-only beta; not a stable release." "dist\OCRYON-$env:VERSION-Windows-x64.zip" "dist\OCRYON-$env:VERSION-Setup.exe" "dist\OCRYON-$env:VERSION-SHA256SUMS.txt"
