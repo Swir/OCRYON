@@ -1,11 +1,15 @@
+#ifndef MyAppVersion
+  #define MyAppVersion "0.1.0-beta.1"
+#endif
+
 [Setup]
 AppId={{7F17E5CF-2330-4F34-9D6A-71834D9AD3F4}
 AppName=OCRYON
-AppVersion=0.1.0-beta.1
+AppVersion={#MyAppVersion}
 DefaultDirName={localappdata}\Programs\OCRYON
 DefaultGroupName=OCRYON
 OutputDir=..\dist
-OutputBaseFilename=OCRYON-0.1.0-beta.1-Setup
+OutputBaseFilename=OCRYON-{#MyAppVersion}-Setup
 Compression=lzma2
 SolidCompression=yes
 PrivilegesRequired=lowest
