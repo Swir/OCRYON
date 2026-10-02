@@ -32,6 +32,14 @@ QPushButton:hover {
     background: #1b3150;
     border-color: #4d86c5;
 }
+QPushButton:focus, QComboBox:focus, QListWidget:focus, QPlainTextEdit:focus {
+    border: 2px solid #67b7ff;
+}
+QPushButton:disabled, QComboBox:disabled {
+    color: #75869c;
+    background: #101925;
+    border-color: #23354b;
+}
 QPushButton#primary {
     background: #145ea8;
     border-color: #2c88dc;
