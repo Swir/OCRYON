@@ -5,6 +5,9 @@ from dataclasses import dataclass
 from PIL import Image, ImageEnhance, ImageFilter, ImageOps
 
 
+PREPROCESS_PRESET_NAMES = ("automatic", "clean_scan", "photo", "high_contrast", "original")
+
+
 @dataclass(frozen=True, slots=True)
 class PreprocessOptions:
     grayscale: bool = True
