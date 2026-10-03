@@ -5,7 +5,8 @@ from collections.abc import Sequence
 from PySide6.QtCore import QObject, Signal, Slot
 
 from ocryon.core.document import DocumentPage
-from ocryon.core.ocr import OCREngine
+from ocryon.core.ocr import OCREngine, TesseractEngine
+from ocryon.core.preprocess import preprocess_options_for_preset
 
 
 class OCRWorker(QObject):
@@ -27,12 +28,17 @@ class OCRWorker(QObject):
         pages: Sequence[DocumentPage],
         page_indexes: Sequence[int],
         language: str,
+        preprocess_preset: str | None = None,
     ) -> None:
         super().__init__()
         self._engine = engine
         self._pages = pages
         self._page_indexes = list(page_indexes)
         self._language = language
+        if preprocess_preset is not None:
+            if not isinstance(engine, TesseractEngine):
+                raise TypeError("preprocess_preset requires TesseractEngine")
+            engine.preprocess_options = preprocess_options_for_preset(preprocess_preset)
         self._cancel_requested = False
 
     def cancel(self) -> None:
