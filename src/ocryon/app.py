@@ -13,6 +13,7 @@ from ocryon.ui.theme import APP_STYLESHEET
 def main() -> int:
     app = QApplication(sys.argv)
     app.setApplicationName("OCRYON")
+    app.setApplicationDisplayName("OCRYON")
     app.setOrganizationName("Swir")
     app.setWindowIcon(QIcon(str(asset_path("ocryon.svg"))))
     app.setStyleSheet(APP_STYLESHEET)
