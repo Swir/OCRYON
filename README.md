@@ -142,7 +142,7 @@ The OCR engine is kept separate from UI code so recognition backends and preproc
 - [x] Windows EXE/ZIP packaging pipeline
 - [x] Windows installer pipeline
 - [x] Word-level OCR coordinates and first-pass layout reconstruction
-- [ ] Advanced preprocessing controls
+- [x] Advanced preprocessing controls
 - [ ] Accessibility and HiDPI polish
 - [ ] Diagnostics and recovery UI
 - [ ] 0.2.0 frozen Windows package/installer smoke
