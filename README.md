@@ -125,6 +125,8 @@ The OCR engine is kept separate from UI code so recognition backends and preproc
 
 **Verified roadmap progress:** **17 / 22 = 77.3%**. README/branding work does not increase this percentage.
 
+Advanced preprocessing is complete and branch-verified.
+
 - [x] Project architecture
 - [x] Windows-first desktop target
 - [x] Image/PDF import
