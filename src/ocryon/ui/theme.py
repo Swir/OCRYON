@@ -25,7 +25,8 @@ QPushButton {
     background: #16243a;
     border: 1px solid #2c4c73;
     border-radius: 8px;
-    padding: 8px 14px;
+    min-height: 32px;
+    padding: 6px 14px;
     font-weight: 600;
 }
 QPushButton:hover {
@@ -52,11 +53,32 @@ QListWidget, QPlainTextEdit, QComboBox {
     border: 1px solid #1c2c42;
     border-radius: 8px;
     selection-background-color: #174f80;
+    min-height: 32px;
     padding: 6px;
+}
+QComboBox {
+    min-width: 88px;
 }
 QScrollArea {
     background: #080d15;
     border: none;
+}
+QProgressBar {
+    background: #0b121d;
+    border: 1px solid #2c4c73;
+    border-radius: 7px;
+    min-height: 20px;
+    text-align: center;
+}
+QProgressBar::chunk {
+    background: #145ea8;
+    border-radius: 6px;
+}
+QToolTip {
+    background: #111d2c;
+    color: #f7fbff;
+    border: 1px solid #4d86c5;
+    padding: 5px;
 }
 QStatusBar {
     background: #070b12;
