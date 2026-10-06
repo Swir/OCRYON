@@ -171,6 +171,9 @@ class MainWindow(QMainWindow):
         if self.page_list.currentRow() < 0 and self.pages:
             self.page_list.setCurrentRow(0)
 
+        if self.pages:
+            self.page_list.setFocus(Qt.OtherFocusReason)
+
         self.statusBar().showMessage(
             f"Loaded {document.source_path.name} — {len(document)} page(s)"
         )
