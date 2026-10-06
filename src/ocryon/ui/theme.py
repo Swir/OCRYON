@@ -53,8 +53,20 @@ QListWidget, QPlainTextEdit, QComboBox {
     border: 1px solid #1c2c42;
     border-radius: 8px;
     selection-background-color: #174f80;
+    selection-color: #ffffff;
     min-height: 32px;
     padding: 6px;
+}
+QListWidget::item {
+    min-height: 28px;
+    padding: 2px 4px;
+}
+QListWidget::item:selected {
+    background: #174f80;
+    color: #ffffff;
+}
+QPlainTextEdit {
+    placeholder-text-color: #8fa2bc;
 }
 QComboBox {
     min-width: 88px;
