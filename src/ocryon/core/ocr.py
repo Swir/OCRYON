@@ -73,19 +73,30 @@ class TesseractEngine(OCREngine):
         if self.executable:
             pytesseract.pytesseract.tesseract_cmd = str(self.executable)
 
+    @staticmethod
+    def _bundled_executable() -> Path:
+        # PyInstaller 6 onedir uses sys._MEIPASS for the _internal data root.
+        # Never infer a bundled binary from the current working directory.
+        root = Path(
+            getattr(sys, "_MEIPASS", Path(sys.executable).parent)
+        )
+        return root / "vendor" / "tesseract" / "tesseract.exe"
+
     def _resolve_executable(self) -> Path | None:
+        bundled = self._bundled_executable()
+        if getattr(sys, "frozen", False):
+            # Qualification must not be fooled by host OCRYON_TESSERACT,
+            # PATH, or a vendor folder under an attacker-chosen cwd.
+            return bundled if bundled.is_file() else None
+
         configured = os.getenv("OCRYON_TESSERACT")
-
-        app_root = Path(getattr(sys, "_MEIPASS", Path.cwd()))
         module_root = Path(__file__).resolve().parents[3]
-
         candidates = [
             Path(configured) if configured else None,
-            app_root / "vendor" / "tesseract" / "tesseract.exe",
+            bundled,
             module_root / "vendor" / "tesseract" / "tesseract.exe",
             Path.cwd() / "vendor" / "tesseract" / "tesseract.exe",
         ]
-
         on_path = shutil.which("tesseract")
         if on_path:
             candidates.append(Path(on_path))
@@ -97,6 +108,20 @@ class TesseractEngine(OCREngine):
 
     def available(self) -> bool:
         return self.executable is not None
+
+    def uses_bundled_engine(self) -> bool:
+        # A frozen image must provide the executable AND all three bundled
+        # language models used by the five selectable OCR modes. Otherwise a
+        # developer machine's TESSDATA_PREFIX can mask a broken public ZIP.
+        if self.executable is None:
+            return False
+        if self.executable.resolve() != self._bundled_executable().resolve():
+            return False
+        tessdata = self.executable.parent / "tessdata"
+        return all(
+            (tessdata / f"{code}.traineddata").is_file()
+            for code in ("eng", "pol", "nor")
+        )
 
     def recognize(self, image: Image.Image, language: str = "eng") -> OCRResult:
         if not self.available():
