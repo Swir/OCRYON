@@ -31,6 +31,15 @@ def _report_selftest_status(message: str) -> None:
         pass
 
 
+def _report_selftest_failure() -> None:
+    """Opt-in local diagnostics for synthetic qualification runs only."""
+    destination = os.environ.get("OCRYON_SELFTEST_LOG")
+    if destination:
+        from pathlib import Path
+        import traceback
+        Path(destination).write_text(traceback.format_exc(), encoding="utf-8")
+
+
 def sample_image() -> Image.Image:
     image = Image.new('RGB', (1300, 320), 'white')
     draw = ImageDraw.Draw(image)

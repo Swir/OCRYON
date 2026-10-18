@@ -22,8 +22,8 @@ def _check_frozen(executable: Path, *, cwd: Path | None = None) -> None:
     env = os.environ.copy()
     env["OCRYON_TESSERACT"] = str(executable.parent / "missing-host-tesseract.exe")
     env["TESSDATA_PREFIX"] = str(executable.parent / "missing-host-tessdata")
-    env["QT_QPA_PLATFORM"] = "offscreen"
-    for mode in ("--self-test", "--self-test-unicode", "--self-test-qt"):
+    env.setdefault("QT_QPA_PLATFORM", "windows" if os.name == "nt" else "offscreen")
+    for mode in ("--self-test", "--self-test-unicode", "--self-test-qt", "--self-test-ui"):
         result = subprocess.run(
             [str(executable), mode], cwd=cwd or executable.parent,
             env=env, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,

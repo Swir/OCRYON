@@ -4,7 +4,7 @@ from pathlib import Path
 import math
 
 import fitz
-from PIL import Image
+from PIL import Image, ImageOps
 
 from ocryon.core.document import DocumentPage, LoadedDocument
 
@@ -59,18 +59,52 @@ def load_document(
 
 
 def _load_image(source: Path, budget: int) -> LoadedDocument:
-    with Image.open(source) as opened:
-        width, height = opened.size
-        if width <= 0 or height <= 0 or width * height > MAX_PAGE_PIXELS:
-            raise DocumentTooLargeError("Image exceeds OCRYON's safe page-size limit")
-        if width * height > budget:
-            raise DocumentTooLargeError("Image exceeds OCRYON's remaining document-memory budget")
-        image = opened.convert("RGB").copy()
+    """Load every TIFF/WebP frame, never silently discard later scan pages.
 
-    return LoadedDocument(
-        source_path=source,
-        pages=[DocumentPage(source_path=source, page_number=1, image=image)],
-    )
+    All frame metadata must pass a cumulative pixel/page budget before the
+    first full-frame decode. A valid multipage invoice cannot be exported
+    with only page one without warning the user.
+    """
+    with Image.open(source) as opened:
+        frame_count = getattr(opened, "n_frames", 1)
+        if frame_count <= 0 or frame_count > MAX_DOCUMENT_PAGES:
+            raise DocumentTooLargeError("Image exceeds OCRYON's safe page-count limit")
+
+        total_pixels = 0
+        for index in range(frame_count):
+            opened.seek(index)
+            width, height = opened.size
+            if width <= 0 or height <= 0 or width * height > MAX_PAGE_PIXELS:
+                raise DocumentTooLargeError("Image exceeds OCRYON's safe page-size limit")
+            total_pixels += width * height
+            if total_pixels > budget:
+                raise DocumentTooLargeError(
+                    "Image exceeds OCRYON's remaining document-memory budget"
+                )
+
+        pages: list[DocumentPage] = []
+        for index in range(frame_count):
+            opened.seek(index)
+            # EXIF orientation is display metadata, not pixel geometry.
+            # Normalize exactly once before preview/OCR/searchable PDF, for
+            # each individual frame (some scans use different orientations).
+            oriented = ImageOps.exif_transpose(opened)
+            if "A" in oriented.getbands() or "transparency" in oriented.info:
+                # Dropping alpha with convert("RGB") makes transparent scan
+                # backgrounds black. Opaque black text then becomes invisible
+                # to OCR. Flatten transparency onto paper-white instead.
+                rgba = oriented.convert("RGBA")
+                image = Image.new("RGB", rgba.size, "white")
+                image.paste(rgba, mask=rgba.getchannel("A"))
+            else:
+                image = oriented.convert("RGB")
+            pages.append(DocumentPage(
+                source_path=source,
+                page_number=index + 1,
+                image=image,
+            ))
+
+    return LoadedDocument(source_path=source, pages=pages)
 
 
 def _load_pdf(source: Path, scale: float, budget: int) -> LoadedDocument:
@@ -108,6 +142,7 @@ def _load_pdf(source: Path, scale: float, budget: int) -> LoadedDocument:
                     source_path=source,
                     page_number=index + 1,
                     image=image,
+                    page_size_pt=(float(page.rect.width), float(page.rect.height)),
                 )
             )
 

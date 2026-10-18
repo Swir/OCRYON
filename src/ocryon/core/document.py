@@ -18,6 +18,8 @@ class DocumentPage:
     ocr_text: str = ""
     ocr_language: str | None = None
     ocr_words: tuple["OCRWord", ...] = ()
+    # Source PDF dimensions in physical points (not OCR raster pixels).
+    page_size_pt: tuple[float, float] | None = None
 
     @property
     def label(self) -> str:

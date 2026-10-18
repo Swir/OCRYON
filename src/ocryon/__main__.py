@@ -5,6 +5,9 @@ import sys
 
 
 def main() -> int:
+    if sys.argv[1:] == ["--self-test-ui"]:
+        from ocryon.ui.ui_qualification import run_ui_selftest
+        return run_ui_selftest()
     if sys.argv[1:] == ["--self-test"]:
         # A windowed PyInstaller process may lack stdout. Importing app here
         # would load Qt before we could inspect the bundled OCR engine.

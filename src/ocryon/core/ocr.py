@@ -130,32 +130,13 @@ class TesseractEngine(OCREngine):
                 "OCRYON_TESSERACT to tesseract.exe."
             )
 
-        prepared = prepare_for_ocr(image, self.preprocess_options)
-        tessdata = self.executable.parent / "tessdata"
-        config = "--oem 1"
-        if tessdata.is_dir():
-            config += f' --tessdata-dir "{tessdata}"'
+        # Use the same bounded runner as the Qt worker. It passes the data
+        # directory as one argv item, including spaces and Unicode on Windows.
+        # pytesseract's Windows config splitting retains literal quotes here.
+        from threading import Event
+        from ocryon.core.cancellable_tesseract import recognize_cancellable
 
-        data = pytesseract.image_to_data(
-            prepared,
-            lang=language,
-            config=config,
-            output_type=pytesseract.Output.DICT,
-        )
-        result = _result_from_tesseract_data(
-            data,
-            language=language,
-            source_size=image.size,
-            prepared_size=prepared.size,
-        )
-
-        if result.words:
-            return result
-
-        # Preserve useful OCR output for unusual pages where Tesseract returns
-        # no word rows but still emits plain text.
-        text = pytesseract.image_to_string(prepared, lang=language, config=config)
-        return OCRResult(text=text, language=language)
+        return recognize_cancellable(self, image, language, Event())
 
 
 def _result_from_tesseract_data(

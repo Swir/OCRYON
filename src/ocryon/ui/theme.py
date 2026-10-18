@@ -8,6 +8,9 @@ QWidget {
 QMainWindow {
     background: #070b12;
 }
+QLabel {
+    background: transparent;
+}
 QFrame#topBar, QFrame#panel {
     background: #0f1724;
     border: 1px solid #1b2b42;

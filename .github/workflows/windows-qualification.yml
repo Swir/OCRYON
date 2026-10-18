@@ -1,0 +1,43 @@
+name: OCRYON Windows qualification
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths: ['src/**', 'tests/**', 'tools/**', 'packaging/**', 'pyproject.toml', 'requirements-windows.lock']
+
+permissions:
+  contents: read
+
+jobs:
+  qualify:
+    runs-on: windows-2025
+    timeout-minutes: 35
+    env:
+      QT_QPA_PLATFORM: offscreen
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build and qualify the actual EXE
+        run: python tools/build_on_windows_preview.py
+      - name: Test sources with the bundled real OCR runtime
+        shell: pwsh
+        run: |
+          $env:OCRYON_TESSERACT = (Resolve-Path vendor/tesseract/tesseract.exe).Path
+          $env:PATH = (Resolve-Path vendor/tesseract).Path + ';' + $env:PATH
+          .venv/Scripts/python.exe -m pytest -q
+      - name: Qualify portable archive in a Unicode directory
+        run: .venv/Scripts/python.exe tools/native_rc_acceptance.py --portable-zip OCRYON-0.2.0-Windows-x64-PORTABLE.zip
+      - name: Build installer
+        shell: pwsh
+        run: '& "${env:ProgramFiles(x86)}/Inno Setup 6/ISCC.exe" packaging/OCRYON.iss'
+      - name: Install, test, and uninstall in isolation
+        run: .venv/Scripts/python.exe tools/native_installer_acceptance.py dist/OCRYON-0.2.0-Setup.exe --expected-exe dist/OCRYON/OCRYON.exe --logs build/installer-evidence
+      - uses: actions/upload-artifact@v4
+        with:
+          name: OCRYON-0.2.0-Windows-qualification
+          path: |
+            OCRYON-0.2.0-Windows-x64-PORTABLE.zip*
+            dist/OCRYON-0.2.0-Setup.exe
+            build/installer-evidence/
