@@ -1,0 +1,60 @@
+OCRYON 0.2.0 — native Windows qualification, 2026-10-18
+
+Environment: Windows 11 25H2 x64 (build 26200), Python 3.12.14,
+PySide6 / Qt 6.12.0, Tesseract 5.5.3, PyMuPDF 1.28.2, PyInstaller 6.22.3.
+
+PASS: 133 pytest tests, zero failures, zero skips (12.07 seconds).
+This suite includes unit tests, boundary tests, filesystem/process tests and
+explicit fake-based Qt contract tests. Those fakes are not native GUI evidence.
+
+Separate REAL frozen-EXE acceptance passed:
+--self-test: all five OCR selections, bundled runtime and packaged artwork.
+--self-test-unicode: real Polish/Norwegian OCR, TXT/DOCX/PDF Unicode round trips
+and text searches in exported PDFs.
+--self-test-qt: real QThread work, cancellation of a running Tesseract child,
+child reaping and deferred application close.
+--self-test-ui: accessible names, keyboard focus order and shortcuts,
+diagnostics, retry, image and two-page PDF import, real three-page batch OCR,
+manual edits, all three GUI exports, PDF dimensions and original-file protection.
+File-chooser answers and message-box display are supplied by the harness; loaders,
+QWidgets, QThread, OCR subprocesses and exporters execute their production code.
+
+PASS: final EXE GUI workflow at 100%, 150% and 200% Qt scaling, native Windows
+platform plugin. Screenshots captured from actual Qt windows.
+PASS: GUI startup remained alive for the startup smoke interval.
+PASS: portable ZIP CRC/inventory and all four frozen modes after extraction to
+a path containing Polish and Norwegian characters. Deliberately invalid host
+OCRYON_TESSERACT and TESSDATA_PREFIX values did not replace the bundled engine.
+PASS: per-user installer compiled with Inno Setup 7.1.0; fresh isolated install
+in a Unicode directory; installed EXE byte-identical to the qualified portable
+EXE; all four frozen modes passed; uninstall removed the test installation and
+its registry entry while preserving an independent file outside that directory.
+
+Defects found and fixed during real Windows qualification:
+- quoted pytesseract tessdata arguments failed on Windows;
+- a build-host Poppler ICU DLL broke frozen QtCore imports;
+- Tesseract narrow path arguments broke OCR in Unicode installation directories;
+- upstream --list-langs failed in Unicode working directories;
+- several recovered process-test fixtures assumed Unix execution;
+- preprocessing controls, accessibility, diagnostics and recovery were incomplete.
+
+Reproduction:
+python -m pytest -q
+python tools/build_on_windows_preview.py
+python tools/native_rc_acceptance.py --portable-zip OCRYON-0.2.0-Windows-x64-PORTABLE.zip
+ISCC.exe packaging/OCRYON.iss
+python tools/native_installer_acceptance.py dist/OCRYON-0.2.0-Setup.exe --expected-exe dist/OCRYON/OCRYON.exe --logs build/installer-evidence
+Use the dedicated build environment and expose vendor/tesseract on PATH for the
+model-provenance regression test. Native UI qualification uses QT_QPA_PLATFORM=windows.
+
+Release scope: 22 of 22 roadmap items, including the stable v0.2.0 release.
+Project license: GNU AGPL v3 (AGPL-3.0-only), with full application source,
+build scripts, dependency notices and verified upstream source locations.
+This file records local qualification. Remote CI and published asset checksums
+are reported separately with the release at:
+https://github.com/Swir/OCRYON/releases/tag/v0.2.0
+No Authenticode signing certificate was supplied. Windows 10, a fresh second
+Windows machine, screen-reader usability and all possible documents were not
+tested; these results do not guarantee universal OCR accuracy or zero defects.
+
+The original hourly automation was not modified. Original public beta untouched.

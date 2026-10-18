@@ -6,8 +6,11 @@ __pycache__/
 venv/
 dist/
 build/
-*.spec
 .idea/
 .vscode/
 Thumbs.db
 .DS_Store
+_build_cache/
+vendor/
+*.spec
+OCRYON-*-PORTABLE.zip*

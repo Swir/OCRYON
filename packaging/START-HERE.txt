@@ -1,0 +1,32 @@
+OCRYON 0.2.0 — Windows 11 x64
+
+WERSJA PORTABLE
+Rozpakuj cały ZIP do wybranego katalogu i uruchom OCRYON.exe.
+Zachowaj folder _internal obok programu. Sam plik EXE nie zawiera wszystkich danych.
+Nie musisz instalować Pythona, Qt ani Tesseract. OCR działa lokalnie bez internetu.
+
+INSTALATOR
+Uruchom OCRYON-0.2.0-Setup.exe. Instalacja jest przeznaczona dla bieżącego użytkownika
+i ma własny katalog, oddzielny od wersji beta 0.1 oraz rozwojowego RC.
+
+PRACA Z DOKUMENTEM
+1. Open document: wybierz obraz lub PDF. Kolejne pliki dołączają strony do listy.
+2. Wybierz język: eng, pol, nor, eng+pol lub eng+nor.
+3. Wybierz profil przygotowania obrazu: Automatic, Clean Scan, Photo,
+   High Contrast lub Original.
+4. Recognize page / Recognize all: rozpoznaj stronę lub cały zestaw.
+5. Popraw tekst w prawym panelu. TXT, DOCX i Searchable PDF eksportują wyniki.
+6. Cancel OCR przerywa pracę i przywraca wyniki sprzed bieżącej operacji.
+7. Diagnostics / recovery sprawdza silnik i języki; Retry last OCR ponawia operację.
+
+SKRÓTY
+Ctrl+O: otwórz; F5: OCR strony; Ctrl+F5: OCR wszystkich stron; Esc: anuluj OCR.
+Ctrl+Shift+T / D / P: eksport TXT / DOCX / PDF. F1: diagnostyka.
+
+GRANICE SPRAWDZONEJ WERSJI
+Testy wykonano na Windows 11 25H2, x64. Maksymalnie 200 stron w pojedynczym
+dokumencie, 24 mln pikseli na stronę i 180 mln pikseli w załadowanym zestawie.
+Dokładność OCR zależy od jakości skanu i wybranego języka. Ręczne poprawki tekstu
+unieważniają wcześniejsze współrzędne słów; PDF zachowuje poprawiony tekst.
+Licencja projektu: GNU AGPL v3. Pełny tekst: LICENSE. Program bez gwarancji.
+Pełne źródła: https://github.com/Swir/OCRYON/releases/tag/v0.2.0

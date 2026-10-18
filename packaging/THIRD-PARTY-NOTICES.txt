@@ -1,0 +1,39 @@
+OCRYON 0.2.0 — third-party components
+
+OCRYON's own code is licensed under GNU AGPL version 3 (AGPL-3.0-only).
+Copyright (C) 2026 OCRYON contributors. See LICENSE for the full terms.
+This program is distributed without warranty. Full application source and build
+instructions accompany the release at https://github.com/Swir/OCRYON/releases/tag/v0.2.0
+This build contains unmodified third-party components. Their authors retain
+copyright and their respective licenses apply. PyMuPDF is used under AGPL v3.
+
+Python 3.12.14: PSF license. https://www.python.org/downloads/source/
+PySide6 / Qt 6.12.0 / Shiboken: LGPLv3 / GPL alternatives. Qt modules and plugins
+that require GPLv3 (including Virtual Keyboard) retain those terms. Qt shared
+libraries are in _internal/PySide6 and can be replaced
+with compatible builds. Reverse engineering for debugging modifications to those
+libraries is permitted by the applicable LGPL terms.
+Sources: https://code.qt.io/cgit/pyside/pyside-setup.git/tag/?h=v6.12.0
+https://download.qt.io/official_releases/qt/6.12/
+Qt third-party notices: https://doc.qt.io/qt-6/licenses-used-in-qt.html
+
+PyMuPDF 1.28.2 / MuPDF: GNU AGPL v3 or an Artifex commercial license.
+https://github.com/pymupdf/PyMuPDF/tree/1.28.2
+https://mupdf.com/releases/
+
+Tesseract 5.5.3 and tessdata_fast: Apache 2.0. Runtime source release:
+https://github.com/tesseract-ocr/tesseract/tree/5.5.3
+Windows installer SHA256:
+bee9e3434bd94fd65387d9be28cd467a41f61b1275383b55b0f59a1331270ae4
+Language data revision: 87416418657359cb625c412a48b6e1d6d41c29bd
+https://github.com/tesseract-ocr/tessdata_fast/tree/87416418657359cb625c412a48b6e1d6d41c29bd
+The separate runtime includes upstream Leptonica, image libraries and MinGW runtime
+dependencies. See _internal/vendor/tesseract/doc and the upstream Windows build.
+
+Pillow: MIT-CMU; python-docx: MIT; lxml: BSD with bundled libxml2/libxslt terms;
+pytesseract: Apache 2.0; packaging: Apache 2.0 / BSD; typing_extensions: PSF.
+PyInstaller: GPL with its bootloader distribution exception.
+Exact package versions are recorded in DEPENDENCIES.json; packaged license texts
+are in licenses/. Build dependency versions are pinned in requirements-windows.lock
+in the accompanying source archive. SOURCE-DEPENDENCIES.json provides versioned
+source locations for the unmodified Python and Qt components.
