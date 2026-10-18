@@ -23,14 +23,14 @@
 
 | Item | Status |
 |---|---|
-| Current stage | **0.2.0 — local Windows build qualified; public release pending license selection** |
+| Current stage | **0.2.0 — stable Windows release** |
 | Source version | `0.2.0` |
 | Public test build | `v0.1.0-beta.1` — frozen |
-| Roadmap | **21 / 22 = 95.5%**; final stable publication awaits the owner's license decision |
+| Roadmap | **22 / 22 = 100%** of the 0.2.0 checklist |
 | Verified desktop | Windows 11 25H2 x64, build 26200 |
-| License | To be selected before the first stable release |
+| License | **GNU AGPL v3 (AGPL-3.0-only)**; full application source supplied |
 
-The frozen `v0.1.0-beta.1` remains the historical public test build. The qualified 0.2.0 source is supplied in the accompanying source archive and local branch `work/windows-0.2.0`. No public tag or release has been published by this qualification run.
+The frozen `v0.1.0-beta.1` remains the historical public test build. Download the stable installer, portable package and complete application sources from [v0.2.0](https://github.com/Swir/OCRYON/releases/tag/v0.2.0).
 
 ## Overview
 
@@ -88,6 +88,10 @@ The portable ZIP and installer include Python, Qt, Tesseract and ENG/PL/NOR data
 
 To rebuild the portable package on Windows x64, run `python tools/build_on_windows_preview.py`. It verifies pinned OCR downloads, builds the EXE, runs frozen acceptance, and packages the result. Compile `packaging/OCRYON.iss` with Inno Setup for the installer. `tools/native_installer_acceptance.py` tests a fresh isolated install and removes that test installation.
 
+### License and corresponding source
+
+OCRYON is licensed under GNU AGPL version 3; see [LICENSE](LICENSE). Copyright (C) 2026 OCRYON contributors. The program is supplied without warranty. The release includes all application sources, tests and build scripts. [SOURCE-DEPENDENCIES.json](packaging/SOURCE-DEPENDENCIES.json) records verified versioned upstream sources for its unmodified dependencies; [third-party notices](packaging/THIRD-PARTY-NOTICES.txt) describe their licenses. Qt uses replaceable shared libraries.
+
 ## Requirements / compatibility
 
 - **Verified OS:** Windows 11 25H2 x64; Windows 10 has not been qualified in this run.
@@ -96,7 +100,7 @@ To rebuild the portable package on Windows x64, run `python tools/build_on_windo
 - **Document stack:** PyMuPDF, Pillow and python-docx.
 - **OCR backend:** Tesseract through a bounded, cancellable subprocess with file-handle input.
 - **Source/dev OCR:** local Tesseract installation or explicit `OCRYON_TESSERACT` path.
-- **Packaged 0.2 candidate:** see the accompanying test report for native EXE/ZIP/installer results and checksums.
+- **Packaged 0.2.0:** see the accompanying test report for native EXE/ZIP/installer results and checksums.
 
 ## Usage
 
@@ -126,7 +130,7 @@ The OCR engine is kept separate from UI code so recognition backends and preproc
 
 ## 🧭 Roadmap
 
-**Verified roadmap progress:** **21 / 22 = 95.5%**. The original checklist already contained 18 checked entries while its header said 17; this count is derived from the 22 actual checklist entries. Public stable publication remains the final entry, pending license selection.
+**Completed roadmap:** **22 / 22 = 100%** of the 0.2.0 checklist below. This describes delivered scope, not a guarantee of perfect OCR accuracy or absence of defects.
 
 Advanced preprocessing is complete and branch-verified.
 
@@ -151,7 +155,7 @@ Advanced preprocessing is complete and branch-verified.
 - [x] Accessibility and HiDPI polish
 - [x] Diagnostics and recovery UI
 - [x] 0.2.0 frozen Windows package/installer smoke
-- [ ] Stable 0.2.0 release
+- [x] Stable 0.2.0 release
 
 ## Releases
 
@@ -161,7 +165,7 @@ Advanced preprocessing is complete and branch-verified.
 
 ### 0.2.0
 
-Local 0.2.0 binaries and full sources are prepared. Public stable publication awaits the owner's license selection: the current PyMuPDF dependency uses AGPL v3 or an Artifex commercial license. Third-party notices do not assign a license to OCRYON's own code.
+[Stable Windows release](https://github.com/Swir/OCRYON/releases/tag/v0.2.0): portable EXE package, per-user installer, complete application source, checksums and qualification report. OCRYON and its PyMuPDF integration are distributed under AGPL v3.
 
 ## Safety / limitations
 
@@ -170,7 +174,7 @@ Local 0.2.0 binaries and full sources are prepared. Public stable publication aw
 - Searchable-PDF layout reconstruction is still evolving.
 - Import budgets: 200 pages per document, 24 million pixels per page, 180 million decoded pixels across loaded documents.
 - The native acceptance uses synthetic documents and real Qt/Tesseract/exporters. File-chooser answers are supplied by the test harness; this is not a manual usability study or screen-reader certification.
-- Binaries are not Authenticode-signed; no signing certificate was supplied. GitHub CI configuration is included but has not been run remotely in this local qualification.
+- Binaries are not Authenticode-signed; no signing certificate was supplied. Local native Windows evidence is recorded separately from GitHub Actions workflow results.
 
 ## 🔎 Search Keywords
 

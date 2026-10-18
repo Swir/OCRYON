@@ -34,6 +34,7 @@ def main() -> None:
     shutil.copy2(ROOT / "vendor" / "tesseract" / "doc" / "LICENSE", licenses / "Tesseract-LICENSE.txt")
     shutil.copy2(ROOT / "packaging" / "THIRD-PARTY-NOTICES.txt", destination)
     shutil.copy2(ROOT / "packaging" / "START-HERE.txt", destination)
+    shutil.copy2(ROOT / "packaging" / "SOURCE-DEPENDENCIES.json", destination)
     (destination / "DEPENDENCIES.json").write_text(json.dumps(inventory, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     # Include an owner-selected project license when one has been supplied.
     if (ROOT / "LICENSE").is_file():

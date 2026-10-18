@@ -28,4 +28,5 @@ Testy wykonano na Windows 11 25H2, x64. Maksymalnie 200 stron w pojedynczym
 dokumencie, 24 mln pikseli na stronę i 180 mln pikseli w załadowanym zestawie.
 Dokładność OCR zależy od jakości skanu i wybranego języka. Ręczne poprawki tekstu
 unieważniają wcześniejsze współrzędne słów; PDF zachowuje poprawiony tekst.
-Ten lokalny pakiet oczekuje na wybór licencji projektu przed publicznym wydaniem.
+Licencja projektu: GNU AGPL v3. Pełny tekst: LICENSE. Program bez gwarancji.
+Pełne źródła: https://github.com/Swir/OCRYON/releases/tag/v0.2.0

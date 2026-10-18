@@ -1,0 +1,206 @@
+{
+  "application": "OCRYON",
+  "version": "0.2.0",
+  "license": "AGPL-3.0-only",
+  "application_source": "https://github.com/Swir/OCRYON/releases/tag/v0.2.0",
+  "build_instructions": "README.md; requirements-windows.lock; tools/build_on_windows_preview.py; packaging/OCRYON.iss",
+  "third_party_source": "Unmodified upstream sources. For recursive repositories include all submodules. Python package source archives include their build scripts and license notices. Qt binaries are dynamically linked and may be replaced by compatible builds.",
+  "verified_on": "2026-10-18",
+  "components": [
+    {
+      "name": "PySide6",
+      "version": "6.12.0",
+      "project_urls": {
+        "Changelog": "https://code.qt.io/cgit/pyside/pyside-setup.git/tree/doc/changelogs",
+        "Documentation": "https://doc.qt.io/qtforpython",
+        "Homepage": "https://pyside.org",
+        "Repository": "https://code.qt.io/cgit/pyside/pyside-setup.git/",
+        "Tracker": "https://qt-project.atlassian.net/browse/PYSIDE"
+      },
+      "source_distributions": []
+    },
+    {
+      "name": "PyMuPDF",
+      "version": "1.28.2",
+      "project_urls": {
+        "Changelog": "https://pymupdf.readthedocs.io/en/latest/changes.html",
+        "Documentation": "https://pymupdf.readthedocs.io/",
+        "Source": "https://github.com/pymupdf/pymupdf",
+        "Tracker": "https://github.com/pymupdf/PyMuPDF/issues"
+      },
+      "source_distributions": [
+        {
+          "url": "https://files.pythonhosted.org/packages/a3/fb/b6761fa2d5266f2cdb24c3b91f4023070ab7848381417678e7a289a1d52a/pymupdf-1.28.2.tar.gz",
+          "sha256": "5e0be7908a715aa20333caddd73f1d6f01e4cd0c26e869fa2dd0b7f344da2249"
+        }
+      ]
+    },
+    {
+      "name": "Pillow",
+      "version": "11.3.0",
+      "project_urls": {
+        "Changelog": "https://github.com/python-pillow/Pillow/releases",
+        "Documentation": "https://pillow.readthedocs.io",
+        "Funding": "https://tidelift.com/subscription/pkg/pypi-pillow?utm_source=pypi-pillow&utm_medium=pypi",
+        "Homepage": "https://python-pillow.github.io",
+        "Mastodon": "https://fosstodon.org/@pillow",
+        "Release notes": "https://pillow.readthedocs.io/en/stable/releasenotes/index.html",
+        "Source": "https://github.com/python-pillow/Pillow"
+      },
+      "source_distributions": [
+        {
+          "url": "https://files.pythonhosted.org/packages/f3/0d/d0d6dea55cd152ce3d6767bb38a8fc10e33796ba4ba210cbab9354b6d238/pillow-11.3.0.tar.gz",
+          "sha256": "3828ee7586cd0b2091b6209e5ad53e20d0649bbe87164a459d0676e035e8f523"
+        }
+      ]
+    },
+    {
+      "name": "python-docx",
+      "version": "1.2.0",
+      "project_urls": {
+        "Changelog": "https://github.com/python-openxml/python-docx/blob/master/HISTORY.rst",
+        "Documentation": "https://python-docx.readthedocs.org/en/latest/",
+        "Homepage": "https://github.com/python-openxml/python-docx",
+        "Repository": "https://github.com/python-openxml/python-docx"
+      },
+      "source_distributions": [
+        {
+          "url": "https://files.pythonhosted.org/packages/a9/f7/eddfe33871520adab45aaa1a71f0402a2252050c14c7e3009446c8f4701c/python_docx-1.2.0.tar.gz",
+          "sha256": "7bc9d7b7d8a69c9c02ca09216118c86552704edc23bac179283f2e38f86220ce"
+        }
+      ]
+    },
+    {
+      "name": "lxml",
+      "version": "6.1.3",
+      "project_urls": {
+        "Bug Tracker": "https://bugs.launchpad.net/lxml",
+        "Homepage": "https://lxml.de/",
+        "Source": "https://github.com/lxml/lxml"
+      },
+      "source_distributions": [
+        {
+          "url": "https://files.pythonhosted.org/packages/23/ad/28ecd7cb894d172f3c9c80a075eeeb2017ac62e3632cee05a5f9493547eb/lxml-6.1.3.tar.gz",
+          "sha256": "45222d94ddd511536f3b2f7d9deae3b2339b4ce0f075f1ca25703b07cad9dd21"
+        }
+      ]
+    },
+    {
+      "name": "pytesseract",
+      "version": "0.3.13",
+      "project_urls": {
+        "Homepage": "https://github.com/madmaze/pytesseract"
+      },
+      "source_distributions": [
+        {
+          "url": "https://files.pythonhosted.org/packages/9f/a6/7d679b83c285974a7cb94d739b461fa7e7a9b17a3abfd7bf6cbc5c2394b0/pytesseract-0.3.13.tar.gz",
+          "sha256": "4bf5f880c99406f52a3cfc2633e42d9dc67615e69d8a509d74867d3baddb5db9"
+        }
+      ]
+    },
+    {
+      "name": "packaging",
+      "version": "26.3",
+      "project_urls": {
+        "Documentation": "https://packaging.pypa.io/",
+        "Source": "https://github.com/pypa/packaging"
+      },
+      "source_distributions": [
+        {
+          "url": "https://files.pythonhosted.org/packages/7d/fa/3944b40b07da9ce895c0e6303a5ab7d53da063554f534556b134a54d6093/packaging-26.3.tar.gz",
+          "sha256": "94edc256424af38762eb31306eed28beb9f0efc50a8837492c9d6fd6004aed79"
+        }
+      ]
+    },
+    {
+      "name": "typing_extensions",
+      "version": "4.16.0",
+      "project_urls": {
+        "Bug Tracker": "https://github.com/python/typing_extensions/issues",
+        "Changes": "https://github.com/python/typing_extensions/blob/main/CHANGELOG.md",
+        "Documentation": "https://typing-extensions.readthedocs.io/",
+        "Home": "https://github.com/python/typing_extensions",
+        "Q & A": "https://github.com/python/typing/discussions",
+        "Repository": "https://github.com/python/typing_extensions"
+      },
+      "source_distributions": [
+        {
+          "url": "https://files.pythonhosted.org/packages/f6/cc/6253133b5bb138fc3306cebfbda2c520f545d36b5be2c7255cc528bb45d6/typing_extensions-4.16.0.tar.gz",
+          "sha256": "dc983d19a509c94dba722ee6abd33940f7c05a89e243c47e907eb4db6f1a43e5"
+        }
+      ]
+    },
+    {
+      "name": "PyInstaller",
+      "version": "6.22.3",
+      "project_urls": {
+        "Documentation": "https://pyinstaller.org",
+        "Homepage": "https://pyinstaller.org",
+        "Release Notes": "https://pyinstaller.org/en/stable/CHANGES.html",
+        "Source Code": "https://github.com/pyinstaller/pyinstaller"
+      },
+      "source_distributions": [
+        {
+          "url": "https://files.pythonhosted.org/packages/63/41/f90302845945abd4ed647933ff5ee7c6ac93983187be67f897b6cb613331/pyinstaller-6.22.3.tar.gz",
+          "sha256": "05eb2f5615503e72939a7224d68b4aff572c6b0438ee4a17d0a4b481f399362d"
+        }
+      ]
+    },
+    {
+      "name": "Qt",
+      "source_url": "https://download.qt.io/official_releases/qt/6.12/6.12.0/single/qt-everywhere-src-6.12.0.tar.xz",
+      "verified_http_status": 200
+    },
+    {
+      "name": "PySide6 and Shiboken",
+      "source_url": "https://download.qt.io/official_releases/QtForPython/pyside6/PySide6-6.12.0-src/pyside-setup-everywhere-src-6.12.0.tar.xz",
+      "verified_http_status": 200
+    },
+    {
+      "name": "MuPDF",
+      "source_url": "https://api.github.com/repos/ArtifexSoftware/mupdf/git/ref/tags/1.28.2",
+      "verified_http_status": 200,
+      "git_ref": {
+        "ref": "refs/tags/1.28.2",
+        "node_id": "MDM6UmVmMzc5Nzg3MTg6cmVmcy90YWdzLzEuMjguMg==",
+        "url": "https://api.github.com/repos/ArtifexSoftware/mupdf/git/refs/tags/1.28.2",
+        "object": {
+          "sha": "fe374accd98a43174a328fa7980d7675e06d5b0d",
+          "type": "commit",
+          "url": "https://api.github.com/repos/ArtifexSoftware/mupdf/git/commits/fe374accd98a43174a328fa7980d7675e06d5b0d"
+        }
+      },
+      "clone_instructions": "Clone the corresponding repository at this tag with git clone --recurse-submodules, then git submodule update --init --recursive."
+    },
+    {
+      "name": "Tesseract",
+      "source_url": "https://api.github.com/repos/tesseract-ocr/tesseract/git/ref/tags/5.5.3",
+      "verified_http_status": 200,
+      "git_ref": {
+        "ref": "refs/tags/5.5.3",
+        "node_id": "MDM6UmVmMjI4ODcwOTQ6cmVmcy90YWdzLzUuNS4z",
+        "url": "https://api.github.com/repos/tesseract-ocr/tesseract/git/refs/tags/5.5.3",
+        "object": {
+          "sha": "6951ffe10ce031374bcd04fe400811da1e7e04ad",
+          "type": "tag",
+          "url": "https://api.github.com/repos/tesseract-ocr/tesseract/git/tags/6951ffe10ce031374bcd04fe400811da1e7e04ad"
+        }
+      },
+      "clone_instructions": "Clone the corresponding repository at this tag with git clone --recurse-submodules, then git submodule update --init --recursive."
+    },
+    {
+      "name": "Python",
+      "source_url": "https://www.python.org/ftp/python/3.12.14/Python-3.12.14.tar.xz",
+      "verified_http_status": 200
+    }
+  ],
+  "language_models": {
+    "repository": "https://github.com/tesseract-ocr/tessdata_fast",
+    "commit": "87416418657359cb625c412a48b6e1d6d41c29bd",
+    "models": [
+      "eng",
+      "pol",
+      "nor"
+    ]
+  }
+}

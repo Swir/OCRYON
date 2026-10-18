@@ -15,7 +15,9 @@ from ocryon.core.ocr import TesseractEngine
 def diagnostic_report(engine: TesseractEngine) -> str:
     lines = [f"OCRYON {__version__}", f"Qt {qVersion()}",
              f"System: {platform.system()} {platform.version()}",
-             f"Application: {'portable / installed' if getattr(sys, 'frozen', False) else 'source'}"]
+             f"Application: {'portable / installed' if getattr(sys, 'frozen', False) else 'source'}",
+             "License: GNU AGPL v3 — distributed without warranty",
+             "Full source: https://github.com/Swir/OCRYON/tree/v0.2.0"]
     executable = engine.executable
     if executable is None or not executable.is_file():
         return "\n".join(lines + ["OCR engine: MISSING", "Recovery: extract the complete portable ZIP or reinstall OCRYON."])

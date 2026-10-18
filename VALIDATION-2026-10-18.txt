@@ -3,7 +3,7 @@ OCRYON 0.2.0 — native Windows qualification, 2026-10-18
 Environment: Windows 11 25H2 x64 (build 26200), Python 3.12.14,
 PySide6 / Qt 6.12.0, Tesseract 5.5.3, PyMuPDF 1.28.2, PyInstaller 6.22.3.
 
-PASS: 133 pytest tests, zero failures, zero skips (10.64 seconds).
+PASS: 133 pytest tests, zero failures, zero skips (12.07 seconds).
 This suite includes unit tests, boundary tests, filesystem/process tests and
 explicit fake-based Qt contract tests. Those fakes are not native GUI evidence.
 
@@ -47,9 +47,12 @@ python tools/native_installer_acceptance.py dist/OCRYON-0.2.0-Setup.exe --expect
 Use the dedicated build environment and expose vendor/tesseract on PATH for the
 model-provenance regression test. Native UI qualification uses QT_QPA_PLATFORM=windows.
 
-Release status: 21 of 22 roadmap items qualified (95.5%). Public stable release
-awaits the owner's project-license selection. No public tag/release was created.
-GitHub CI configuration is supplied but remote CI was not executed in this run.
+Release scope: 22 of 22 roadmap items, including the stable v0.2.0 release.
+Project license: GNU AGPL v3 (AGPL-3.0-only), with full application source,
+build scripts, dependency notices and verified upstream source locations.
+This file records local qualification. Remote CI and published asset checksums
+are reported separately with the release at:
+https://github.com/Swir/OCRYON/releases/tag/v0.2.0
 No Authenticode signing certificate was supplied. Windows 10, a fresh second
 Windows machine, screen-reader usability and all possible documents were not
 tested; these results do not guarantee universal OCR accuracy or zero defects.

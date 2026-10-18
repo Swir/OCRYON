@@ -8,6 +8,7 @@
 AppId={{573CF662-76A6-4D06-95D2-230D617919A3}
 AppName=OCRYON
 AppVersion={#MyAppVersion}
+LicenseFile=..\LICENSE
 DefaultDirName={localappdata}\Programs\OCRYON-0.2
 DefaultGroupName=OCRYON
 OutputDir=..\dist
