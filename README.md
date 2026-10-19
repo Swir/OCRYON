@@ -19,6 +19,12 @@
 
 </div>
 
+## 📸 Screenshot
+
+![OCRYON application screenshot](docs/screenshots/application.png)
+
+Initial application window, rendered from the real Qt interface on Windows (offscreen capture).
+
 ## Project status
 
 | Item | Status |
